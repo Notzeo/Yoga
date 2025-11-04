@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yogasthali - Find Balance. Train with AI.</title>
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CDN and configure custom theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Tailwind Configuration for Poppins and requested colors */
+        @layer base {
+            :root {
+                --color-bg-base: #F7FAF7;
+                --color-accent-green: #A8D5BA;
+                --color-accent-peach: #FFE8C8;
+                --color-text-dark: #444;
+            }
+        }
+        
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg-base);
+            color: var(--color-text-dark);
+        }
+        
+        .hero-bg {
+            background-image: linear-gradient(135deg, rgba(247, 250, 247, 0.9), rgba(168, 213, 186, 0.4));
+            min-height: calc(100vh - 64px); /* Full height minus navbar */
+        }
+
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            transition: color 0.3s ease;
+            color: var(--color-text-dark);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background-color: var(--color-accent-green);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .hero-title {
+            animation: fadeInTop 1.5s ease-out;
+        }
+        .hero-subtitle {
+            animation: fadeInTop 1.8s ease-out;
+        }
+
+        .btn-glow {
+            box-shadow: 0 0 10px rgba(168, 213, 186, 0.5), 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-glow:hover {
+             box-shadow: 0 0 20px rgba(168, 213, 186, 0.8), 0 8px 10px rgba(0, 0, 0, 0.2);
+             transform: translateY(-2px);
+        }
+
+        @keyframes fadeInTop {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-bg-base min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <span class="text-3xl font-bold text-accent-green">Yogasthali</span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="flex space-x-2 sm:space-x-4 text-sm font-medium">
+                    <a href="index.html" class="nav-link font-semibold text-accent-green">Home</a>
+                    <a href="pose_selection.html?mode=learn" class="nav-link">Learn</a>
+                    <a href="pose_selection.html?mode=practice" class="nav-link">Practice</a>
+                    <a href="about.html" class="nav-link hidden sm:inline-block">About</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg flex items-center justify-center text-center flex-grow py-16 px-4">
+        <div>
+            <h1 class="hero-title text-5xl md:text-7xl font-extrabold text-gray-800 mb-4">
+                Find Balance. <span class="text-accent-green">Train with AI.</span>
+            </h1>
+            <p class="hero-subtitle text-lg md:text-xl text-text-dark mb-10 max-w-3xl mx-auto">
+                Experience personalized yoga guidance through real-time posture recognition and correction.
+            </p>
+            
+            <!-- Buttons -->
+            <div class="flex justify-center space-x-6">
+                <a href="pose_selection.html?mode=learn" class="btn-glow bg-accent-green text-black font-semibold py-4 px-10 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out">
+                    Learn New Poses
+                </a>
+                <a href="pose_selection.html?mode=practice" class="btn-glow bg-accent-peach text-text-dark font-semibold py-4 px-10 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out">
+                    Start Practice
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Elevate Your Yoga</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center animate-[fadeIn_2s_ease-out_forwards]">
+                <!-- Feature Card 1 -->
+                <div class="bg-bg-base p-6 rounded-2xl shadow-lg card hover:shadow-2xl transition-all duration-300">
+                    <div class="text-4xl text-accent-green mb-4">🧘</div>
+                    <h3 class="text-xl font-semibold mb-2">AI-Guided Yoga Training</h3>
+                    <p class="text-sm text-text-dark">Harness machine learning to understand and perfect every single movement.</p>
+                </div>
+                <!-- Feature Card 2 -->
+                <div class="bg-bg-base p-6 rounded-2xl shadow-lg card hover:shadow-2xl transition-all duration-300">
+                    <div class="text-4xl text-accent-green mb-4">🎯</div>
+                    <h3 class="text-xl font-semibold mb-2">Real-time Pose Correction</h3>
+                    <p class="text-sm text-text-dark">Get instant, actionable feedback on your body's alignment and symmetry.</p>
+                </div>
+                <!-- Feature Card 3 -->
+                <div class="bg-bg-base p-6 rounded-2xl shadow-lg card hover:shadow-2xl transition-all duration-300">
+                    <div class="text-4xl text-accent-green mb-4">📈</div>
+                    <h3 class="text-xl font-semibold mb-2">Track Your Progress</h3>
+                    <p class="text-sm text-text-dark">Measure accuracy improvements and maintain a consistent daily practice log.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+            &copy; 2025 Yogasthali. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yogasthali - About</title>
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CDN and configure custom theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Tailwind Configuration for Poppins and requested colors, consistent with other files */
+        @layer base {
+            :root {
+                --color-bg-base: #F7FAF7;
+                --color-accent-green: #A8D5BA;
+                --color-accent-peach: #FFE8C8;
+                --color-text-dark: #444;
+                --color-text-link: rgba(167, 105, 166, 0.899); 
+                --color-title-green: rgb(31, 131, 76); 
+                --color-deep-green: rgb(30, 91, 69); /* For deeper accents */
+            }
+        }
+        
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg-base);
+            color: var(--color-text-dark);
+        }
+        
+        /* Navbar link transitions */
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            transition: color 0.3s ease;
+            color: var(--color-text-dark);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background-color: var(--color-accent-green);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .gradient-bg {
+            background-image: linear-gradient(to bottom right, var(--color-bg-base), rgba(168, 213, 186, 0.2));
+        }
+
+        /* Specific styles for the About page content */
+        .about-link {
+            text-decoration: none;
+            color: var(--color-text-link);
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .about-link:hover {
+            color: rgb(133, 70, 132);
+        }
+        
+        /* Custom style for the main title text */
+        .main-title-text {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; 
+            color: var(--color-title-green); 
+            text-shadow: 3px 3px 5px rgba(30, 91, 69, 0.5); /* Stronger shadow */
+        }
+
+        .cursive-text {
+            /* Mimics the original 'cursive' font family */
+            font-family: 'cursive';
+            color: rgb(54, 54, 93); 
+            line-height: 1.8;
+        }
+
+        /* Enhanced Card and CTA Styling */
+        .elevated-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); /* Stronger, softer shadow */
+            border-radius: 1.5rem; /* rounded-3xl */
+        }
+        .elevated-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .cta-button {
+             transition: all 0.3s ease;
+             background-color: var(--color-deep-green);
+        }
+        .cta-button:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 5px 15px rgba(30, 91, 69, 0.4);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex flex-col">
+
+    <!-- Navbar (Consistent across pages) -->
+    <nav class="sticky top-0 z-50 bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <span class="text-3xl font-bold" style="color: var(--color-accent-green);">Yogasthali</span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="flex space-x-2 sm:space-x-4 text-sm font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pose_selection.html?mode=learn" class="nav-link">Learn</a>
+                    <a href="pose_selection.html?mode=practice" class="nav-link">Practice</a>
+                    <a href="about.html" class="nav-link hidden sm:inline-block">About</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content for About Page -->
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        
+        <!-- About Title & Thematic SVG Header -->
+        <header class="text-center mb-16 relative">
+            
+            <!-- SVG: Stylized Lotus/Mandala for a "Sanctuary" feel -->
+            <div class="mx-auto w-24 h-24 mb-4" style="color: var(--color-accent-green);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm4.28 10.28a.75.75 0 0 0 0-1.06l-3.25-3.25a.75.75 0 1 0-1.06 1.06L14.44 12H7.5a.75.75 0 0 0 0 1.5h6.94l-2.47 2.47a.75.75 0 1 0 1.06 1.06l3.25-3.25Z" clip-rule="evenodd" />
+                    <path d="M14.53 14.53a.75.75 0 0 0 0-1.06l-3.25-3.25a.75.75 0 1 0-1.06 1.06l3.25 3.25a.75.75 0 0 0 1.06 0Z" />
+                </svg>
+            </div>
+            
+            <h1 class="text-6xl sm:text-7xl font-extrabold main-title-text leading-tight tracking-tighter">
+                Yogasthali: Digital Sanctuary
+            </h1>
+            <p class="text-xl text-gray-500 mt-2 italic">Where Ancient Wisdom Meets Machine Learning</p>
+        </header>
+
+        <!-- Two-Column Layout for Aesthetic Separation -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+            <!-- Section 1: The Vision (Creative Content - Elevated with Border and Shadow) -->
+            <section class="elevated-card p-8 space-y-4 bg-white border-b-8 border-l-4" style="border-color: var(--color-accent-green);">
+                <h2 class="text-3xl font-bold mb-3 tracking-wide" style="color: var(--color-deep-green);">Our Mission: Precision and Accessibility</h2>
+                <div class="text-lg text-gray-700">
+                    <p class="mb-4">
+                        **Yogasthali** (meaning 'place of yoga') is a passion project built on the principle that precise alignment should be accessible to everyone, everywhere. 
+                    </p>
+                    <p class="mb-4">
+                        We aim to **democratize constructive yoga feedback**, translating the intricate wisdom of classical *asanas* into immediate, visual guidance. Whether you're a complete beginner finding your foundation or an experienced practitioner refining a deep posture, our goal is to serve as your patient, digital instructor, helping you realize the full, safe potential of your practice.
+                    </p>
+                    <p class="text-sm italic mt-6 font-semibold opacity-75" style="color: var(--color-deep-green);">
+                        — Practice with awareness, grow with precision.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 2: The Technology (User's Provided Data - Elevated with Background Color) -->
+            <section class="elevated-card p-8 space-y-6" style="background-color: var(--color-accent-peach);">
+                <h2 class="text-3xl font-bold mb-3 tracking-wide" style="color: var(--color-deep-green);">The Technology Stack</h2>
+                <div class="text-lg cursive-text">
+                    <p class="mb-6">
+                        Hey there! Welcome to <b>Yogasthali</b>, developed in 2025.
+                    </p>
+                    <p class="mb-6">
+                        We created <b>Yogasthali</b> inspired by various Machine Learning models for visual recognition. This is our first Machine Learning model and our first attempt at Web Development. we have loved (almost) every second of this project and we have learnt more than we could have imagined.
+                    </p>
+                    <p>
+                        <b>Yogasthali</b> uses 
+                        <a href="https://www.tensorflow.org/lite/models/pose_estimation/overview" target="_blank" class="about-link">Pose.Net</a>, developed by Google’s TensorFlow, and 
+                        <a href="https://ml5js.org/" target="_blank" class="about-link">ml5.js</a>, a JavaScript library for Machine Learning on the browser. Most of our learning was following  
+                        <a href="https://www.youtube.com/playlist?list=PLRqwX-V7Uu6YPSwT06y_AEYTqIwbeam3y" target="_blank" class="about-link">The Coding Train’s</a> YouTube playlist on Pose Estimation.
+                    </p>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Call to Action / Next Steps (Large and Prominent) -->
+        <div class="text-center mt-16">
+            <a href="pose_selection.html?mode=practice" class="cta-button inline-block px-12 py-5 text-xl font-semibold text-white rounded-xl shadow-xl hover:scale-[1.03]">
+                Start Your Guided Practice Now →
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Footer (Consistent across pages) -->
+    <footer class="bg-gray-100 py-6 border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+            &copy; 2025 Yogasthali. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>

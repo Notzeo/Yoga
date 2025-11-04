@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yogasthali - Virabhadrasana 2 (Warrior 2 Pose)</title>
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CDN and configure custom theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Tailwind Configuration for Poppins and requested colors, consistent with other files */
+        @layer base {
+            :root {
+                --color-bg-base: #F7FAF7;
+                --color-accent-green: #A8D5BA;
+                --color-accent-peach: #FFE8C8;
+                --color-text-dark: #444;
+            }
+        }
+        
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg-base);
+            color: var(--color-text-dark);
+        }
+        
+        /* Navbar link transitions */
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            transition: color 0.3s ease;
+            color: var(--color-text-dark);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background-color: var(--color-accent-green);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .gradient-bg {
+            background-image: linear-gradient(to bottom right, var(--color-bg-base), rgba(168, 213, 186, 0.2));
+        }
+
+        /* Specific styles for the info page content */
+        .content-section {
+            background-color: white;
+            border-left: 5px solid var(--color-accent-green);
+            padding: 2rem;
+        }
+
+        .list-item {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .highlight {
+            color: rgb(37 99 235); /* Tailwind blue-600 equivalent for emphasis */
+            font-style: italic;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex flex-col">
+
+    <!-- Navbar (Consistent across pages) -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <span class="text-3xl font-bold" style="color: var(--color-accent-green);">Yogasthali</span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="flex space-x-2 sm:space-x-4 text-sm font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pose_selection.html?mode=learn" class="nav-link">Learn</a>
+                    <a href="pose_selection.html?mode=practice" class="nav-link">Practice</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">About</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content for Pose Information -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Pose Title and Subtitle -->
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-2" style="color: var(--color-accent-green);">VIRABHADRASANA II</h1>
+            <p class="text-xl text-gray-700 italic">Warrior 2 Pose</p>
+        </header>
+
+        <!-- Main Description -->
+        <section class="mb-10 p-6 rounded-2xl shadow-xl" style="background-color: var(--color-accent-peach);">
+            <p class="text-lg leading-relaxed text-text-dark">
+                **Virabhadrasana II** (Warrior 2 Pose), named after the Hindu god who incarnated as a human, enhances the strength and stamina of beginner and advanced yogis alike. In the pose, your front knee bends to create a stretch in your hips, your arms engage and extend straight out from your shoulders, and your gaze, or <span class="highlight">drishti</span>, remains calm and steady toward your front hand. It is the second of three poses dedicated to Virabhadra.
+            </p>
+        </section>
+        
+        <!-- Pose Image and Benefits Section Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            
+            <!-- Pose Image 1 (Full Width on Mobile/Tablet, 1/3 on Desktop) -->
+            <div class="lg:col-span-1 rounded-2xl overflow-hidden shadow-2xl">
+                <img src="images/virbhadra3.jpeg" 
+                     alt="Illustration of Virabhadrasana II (Warrior 2 Pose) - Strong Standing Posture" 
+                     class="w-full h-auto object-cover"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/A8D5BA/444?text=Warrior+2+Posture'; this.style.height='300px'; this.style.width='100%';"
+                     style="min-height: 250px;">
+                <p class="text-sm text-center text-gray-500 py-2 bg-white">Warrior II, focused and strong</p>
+            </div>
+
+            <!-- Benefits (2/3 on Desktop) -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Benefits Section -->
+                <section class="content-section rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">THE BENEFITS OF VIRABHADRASANA II</h2>
+                    <p class="text-gray-700 list-item leading-relaxed">
+                        The posture strengthens your **core**, including your abs and back muscles, as well as the **hip flexors**, **gluteal muscles**, inner thigh, and ankle of the bent leg. In your back leg, the pose stretches the hip flexors, hamstring, and calf muscles. Warrior II stretches your chest, stretches and strengthens your shoulders, and increases your **endurance**, one bent knee at a time.
+                    </p>
+                </section>
+
+                <!-- Contraindications Section (Using a minimal caution block for structure consistency) -->
+                <section class="p-6 rounded-xl shadow-lg border border-red-300/50" style="background-color: var(--color-accent-peach);">
+                    <h2 class="text-2xl font-semibold text-red-600 mb-4">CAUTIONS</h2>
+                    <p class="text-gray-700 list-item">
+                        Consult a healthcare professional if you have recent or chronic **knee, hip, or shoulder injuries**. Individuals with high blood pressure should avoid holding the arms overhead for long periods.
+                    </p>
+                </section>
+            </div>
+        </div>
+        
+        <!-- How to Perform Steps Section -->
+        <section class="mb-10 p-6 rounded-2xl shadow-xl bg-white border border-gray-100">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">STEP-BY-STEP INSTRUCTIONS</h2>
+            <ol class="list-decimal list-outside ml-6 space-y-3">
+                <li class="list-item">Start by facing the long side of your mat with your arms stretched straight out from your shoulders and your feet parallel to each other in a wide stance (ankles approximately beneath your wrists).</li>
+                <li class="list-item">Turn your right foot and knee to face the front of the mat. Angle your left toes slightly in toward the upper left corner of the mat.</li>
+                <li class="list-item">Bend your right knee and stack it directly over your right ankle. Ensure your thigh is parallel to the floor, forming a $90^\circ$ angle if possible.</li>
+                <li class="list-item">Distribute your weight evenly between both legs. Press down firmly through the outer edge of your back foot.</li>
+                <li class="list-item">Keep the crown of your head stacked over your pelvis and your shoulders aligned vertically over your hips.</li>
+                <li class="list-item">Reach strongly through both arms toward the front and back of the mat, keeping them parallel to the floor. Turn your head to look past your right fingertips.</li>
+                <li class="list-item">Stay here for $5$–$10$ deep breaths.</li>
+                <li class="list-item">To come out of the pose, exhale as you press down through your feet, then inhale and straighten your legs. Return your feet to parallel facing the long side of the mat.</li>
+                <li class="list-item">Repeat the sequence on the other side.</li>
+            </ol>
+        </section>
+
+
+        <!-- Variations Section (Two-column layout for visual separation) -->
+        <section class="mb-10">
+            <h2 class="text-4xl font-bold text-center mb-8" style="color: var(--color-accent-green);">VIRABHADRASANA II VARIATIONS</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Variation 1: Against a Wall -->
+                <div class="p-6 rounded-2xl shadow-xl border border-gray-100 bg-white">
+                    <img src="images/virbhadra1.jpeg" 
+                         alt="Warrior 2 variation against a wall" 
+                         class="w-full h-auto object-cover rounded-xl mb-4"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFE8C8/444?text=Wall+Assisted+Warrior+2';">
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Using a Wall for Stability</h3>
+                    <p class="text-gray-700 list-item">
+                        To help maintain your balance and ensure correct alignment in this pose, practice with your back to a wall. You can also place a block between your bent shin and the wall to help maintain the right angle and prevent your knee from tracking forward past your ankle.
+                    </p>
+                </div>
+                
+                <!-- Variation 2: Using a Chair -->
+                <div class="p-6 rounded-2xl shadow-xl border border-gray-100 bg-white">
+                    <img src="images/virbhadra.jpeg" 
+                         alt="Warrior 2 variation using a chair" 
+                         class="w-full h-auto object-cover rounded-xl mb-4"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFE8C8/444?text=Chair+Assisted+Warrior+2';">
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Seated Chair Modification</h3>
+                    <p class="text-gray-700 list-item">
+                        For less strenuous practice, sit on the edge of a sturdy chair and move your thighs into the Warrior II position as outlined in the instructions above. Lift your arms parallel to the ground or keep your hands on your hips for support.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Back to selection button -->
+        <div class="text-center mt-12">
+            <a href="pose_selection.html" class="inline-block px-8 py-3 font-semibold text-white rounded-xl shadow-lg transition-transform duration-300 hover:scale-[1.03]" style="background-color: var(--color-accent-green);">
+                ← Back to Pose Selection
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Footer (Consistent across pages) -->
+    <footer class="bg-gray-100 py-6 border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+            &copy; 2025 Yogasthali. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>

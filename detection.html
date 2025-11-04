@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yogasthali - Pose Detection</title>
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CDN and configure custom theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Tailwind Configuration for Poppins and requested colors */
+        @layer base {
+            :root {
+                --color-bg-base: #F7FAF7;
+                --color-accent-green: #A8D5BA;
+                --color-accent-peach: #FFE8C8;
+                --color-text-dark: #444;
+            }
+        }
+        
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg-base);
+            color: var(--color-text-dark);
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            transition: color 0.3s ease;
+            color: var(--color-text-dark);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background-color: var(--color-accent-green);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .gradient-bg {
+            background-image: linear-gradient(to bottom right, var(--color-bg-base), rgba(168, 213, 186, 0.2));
+        }
+
+        .progress-circle-base {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e5e7eb; /* Light gray base */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex flex-col">
+
+    <!-- Navbar (Consistent) -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <span class="text-3xl font-bold text-accent-green">Yogasthali</span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="flex space-x-2 sm:space-x-4 text-sm font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pose_selection.html?mode=learn" class="nav-link">Learn</a>
+                    <a href="pose_selection.html?mode=practice" class="nav-link font-semibold text-accent-green">Practice</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">About</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+        <h2 id="pose-title" class="text-4xl md:text-5xl font-bold text-gray-800 mb-10 transition-all duration-300">
+            Starting Detection...
+        </h2>
+        
+        <div class="flex flex-col lg:flex-row justify-center items-start lg:space-x-12">
+            
+            <!-- Reference Image and Video Placeholder Column -->
+            <div class="w-full lg:w-3/5 mb-8 lg:mb-0">
+                
+                <!-- Reference Image Container (New Feature) -->
+                <div class="bg-white p-4 mb-6 rounded-2xl shadow-xl border border-gray-100 text-left">
+                    <h3 class="text-xl font-semibold mb-3 text-gray-700">Reference Pose</h3>
+                    <img id="reference-pose-img" src="https://placehold.co/600x450/FFE8C8/444?text=Pose+Image+Loading" 
+                         class="w-full h-auto rounded-xl shadow-md border border-accent-peach transition-all duration-500" 
+                         alt="Reference image for the selected yoga pose."
+                         onerror="this.src='https://placehold.co/600x450/FFE8C8/444?text=Image+Unavailable';"
+                    />
+                </div>
+                
+                <!-- Video Placeholder/Webcam Feed -->
+                <div class="bg-gray-800 w-full aspect-[4/3] rounded-2xl shadow-2xl flex items-center justify-center border-4 border-accent-green animate-pulse">
+                    <p class="text-white text-xl">Webcam Feed / PoseNet Output Placeholder (640x480)</p>
+                </div>
+            </div>
+            
+            <!-- Metrics Panel -->
+            <div class="w-full lg:w-2/5 bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                <h3 class="text-2xl font-semibold mb-6 border-b pb-2 text-accent-green">Real-time Feedback</h3>
+
+                <!-- Pose Accuracy Indicator (Circular Progress Placeholder) -->
+                <div class="flex flex-col items-center mb-8">
+                    <label class="text-xl font-medium text-text-dark mb-4">Pose Accuracy</label>
+                    
+                    <div class="progress-circle-base">
+                        <span id="accuracy-percentage" class="text-4xl font-bold text-accent-green">0%</span>
+                        <!-- In a real app, this would be an SVG or canvas for circular progress -->
+                    </div>
+                </div>
+
+                <!-- Animated Progress Bar (Placeholder) -->
+                <div class="mb-8">
+                    <label class="block text-sm font-medium text-text-dark mb-2">Confidence Score</label>
+                    <div class="w-full bg-gray-200 rounded-full h-3.5 shadow-inner">
+                        <div id="confidence-bar" class="bg-accent-green h-3.5 rounded-full transition-all duration-1000 ease-out" style="width: 0%;"></div>
+                    </div>
+                    <p id="confidence-text" class="text-right text-xs text-gray-500 mt-1">0% (Simulated)</p>
+                </div>
+
+                <!-- Feedback Message -->
+                <div class="bg-accent-peach p-4 rounded-xl mb-6 text-text-dark">
+                    <p class="font-semibold">Feedback:</p>
+                    <p id="feedback-message" class="text-sm mt-1">Ready to begin. Ensure your full body is visible to the camera.</p>
+                </div>
+
+                <!-- Back Button -->
+                <a href="pose_selection.html" class="inline-block bg-gray-500 text-white font-semibold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-gray-600">
+                    Back to Poses
+                </a>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+            &copy; 2025 Yogasthali. All Rights Reserved.
+        </div>
+    </footer>
+    
+    <!-- Dynamic Content Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const poseName = params.get('pose');
+            
+            const titleElement = document.getElementById('pose-title');
+            
+            if (poseName) {
+                // Decode URI component (e.g., 'VirabhadrasanaI' -> 'Virabhadrasana I')
+                let formattedName = decodeURIComponent(poseName)
+                    .replace(/([a-z])([A-Z])/g, '$1 $2'); 
+                
+                titleElement.textContent = formattedName;
+                
+                // Set Reference Image Placeholder based on Pose Name
+                const imgElement = document.getElementById('reference-pose-img');
+                const placeholderUrl = `https://placehold.co/600x450/FFE8C8/444?text=${formattedName.replace(/\s/g, '+')}+Reference`;
+                imgElement.src = placeholderUrl;
+
+
+                // --- START: INITIALIZATION FOR DETECTION ---
+                // Accuracy and Confidence are initialized to 0% for startup
+                const initialAccuracy = 0;
+                document.getElementById('accuracy-percentage').textContent = `${initialAccuracy}%`;
+                document.getElementById('confidence-bar').style.width = `${initialAccuracy}%`;
+                document.getElementById('confidence-text').textContent = `${initialAccuracy}% (Simulated)`;
+                document.getElementById('feedback-message').textContent = "Ready to begin. Ensure your full body is visible to the camera.";
+                // --- END: INITIALIZATION FOR DETECTION ---
+
+            } else {
+                titleElement.textContent = "No Pose Selected";
+                document.getElementById('reference-pose-img').src = `https://placehold.co/600x450/FFE8C8/444?text=Select+a+Pose`;
+                document.getElementById('feedback-message').textContent = "Please return to the selection page.";
+            }
+        });
+    </script>
+</body>
+</html>

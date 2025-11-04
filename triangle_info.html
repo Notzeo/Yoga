@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yogasthali - Utthita Trikonasana (Extended Triangle Pose)</title>
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CDN and configure custom theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Tailwind Configuration for Poppins and requested colors, consistent with other files */
+        @layer base {
+            :root {
+                --color-bg-base: #F7FAF7;
+                --color-accent-green: #A8D5BA;
+                --color-accent-peach: #FFE8C8;
+                --color-text-dark: #444;
+            }
+        }
+        
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg-base);
+            color: var(--color-text-dark);
+        }
+        
+        /* Navbar link transitions */
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            transition: color 0.3s ease;
+            color: var(--color-text-dark);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background-color: var(--color-accent-green);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .gradient-bg {
+            background-image: linear-gradient(to bottom right, var(--color-bg-base), rgba(168, 213, 186, 0.2));
+        }
+
+        /* Specific styles for the info page content */
+        .content-section {
+            background-color: white;
+            border-left: 5px solid var(--color-accent-green);
+            padding: 2rem;
+        }
+
+        .list-item {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .highlight {
+            color: rgb(37 99 235); /* Tailwind blue-600 equivalent for emphasis */
+            font-style: italic;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex flex-col">
+
+    <!-- Navbar (Consistent across pages) -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <span class="text-3xl font-bold" style="color: var(--color-accent-green);">Yogasthali</span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="flex space-x-2 sm:space-x-4 text-sm font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pose_selection.html?mode=learn" class="nav-link">Learn</a>
+                    <a href="pose_selection.html?mode=practice" class="nav-link">Practice</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">About</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content for Pose Information -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Pose Title and Subtitle -->
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-2" style="color: var(--color-accent-green);">UTTHITA TRIKONASANA</h1>
+            <p class="text-xl text-gray-700 italic">Extended Triangle Pose</p>
+        </header>
+
+        <!-- Main Description & Sanskrit Meaning -->
+        <section class="mb-10 p-6 rounded-2xl shadow-xl space-y-4" style="background-color: var(--color-accent-peach);">
+            <p class="text-lg leading-relaxed text-text-dark">
+                **Utthita Trikonasana**, or Extended Triangle Pose, is a foundational standing yoga pose. It is often included in yoga sequences as it helps to increase flexibility in the **hips, hamstrings, and spine**, while also strengthening the legs and core. This asymmetrical posture involves keeping both knees straight and bending the body sideways, which greatly improves overall spine mobility.
+            </p>
+            <hr class="border-gray-300">
+            <h2 class="text-2xl font-semibold text-gray-800">SANSKRIT MEANING</h2>
+            <p class="text-base text-gray-700">
+                In Sanskrit, **Trikonasana** means Triangle pose or Three Angle pose. **Utthita** means extended, hence the full name, Extended Triangle Pose.
+            </p>
+        </section>
+        
+        <!-- Pose Image, Benefits, and Contraindications Section Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            
+            <!-- Pose Image 1 (Full Width on Mobile/Tablet, 1/3 on Desktop) -->
+            <div class="lg:col-span-1 rounded-2xl overflow-hidden shadow-2xl">
+                <img src="images/trik4.jpg" 
+                     alt="Illustration of Utthita Trikonasana (Extended Triangle Pose)" 
+                     class="w-full h-auto object-cover"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/A8D5BA/444?text=Triangle+Pose'; this.style.height='300px'; this.style.width='100%';"
+                     style="min-height: 250px;">
+                <p class="text-sm text-center text-gray-500 py-2 bg-white">Extended Triangle Pose (Trikonasana)</p>
+            </div>
+
+            <!-- Benefits and Contraindications (2/3 on Desktop) -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Benefits Section -->
+                <section class="content-section rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">TRIKONASANA BENEFITS</h2>
+                    <ul class="list-disc list-outside ml-6 space-y-3">
+                        <li class="list-item font-semibold">Strengthens the legs and core.</li>
+                        <li class="list-item">Improves balance and coordination, challenging the practitioner's <span class="highlight">stability</span>.</li>
+                        <li class="list-item">Stretches and strengthens the back muscles, alleviating tension and stiffness in the <span class="highlight">spine</span>.</li>
+                        <li class="list-item">Stimulates the abdominal organs and aids <span class="highlight">digestion</span>.</li>
+                        <li class="list-item">Calms the nervous system, making it an excellent exercise for relieving **stress** and anxiety.</li>
+                        <li class="list-item">Increases energy levels and stamina through physical effort.</li>
+                        <li class="list-item">Promotes good posture and alignment by strengthening the muscles that support the spine.</li>
+                    </ul>
+                </section>
+
+                <!-- Contraindications Section -->
+                <section class="p-6 rounded-xl shadow-lg border border-red-300/50" style="background-color: var(--color-accent-peach);">
+                    <h2 class="text-2xl font-semibold text-red-600 mb-4">TRIKONASANA CONTRAINDICATIONS</h2>
+                    <ul class="list-disc list-outside ml-6 space-y-2">
+                        <li class="list-item">**Low blood pressure:** Practice cautiously, as the posture can cause a sudden drop in blood pressure, leading to dizziness.</li>
+                        <li class="list-item">**Neck or spine injuries:** Avoid or modify the pose to prevent putting pressure on the neck or spine.</li>
+                        <li class="list-item">**Pregnancy:** Modify the posture to avoid pressure on the abdomen; consult a <span class="highlight">qualified yoga teacher</span> or doctor.</li>
+                        <li class="list-item">**High blood pressure:** Practice cautiously, as the pose can cause a sudden increase in blood pressure.</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+        
+        <!-- How to Perform Steps Section -->
+        <section class="mb-10 p-6 rounded-2xl shadow-xl bg-white border border-gray-100">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6 border-b pb-2">TRIKONASANA STEP-BY-STEP INSTRUCTIONS</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <img src="images/trik2.jpg" 
+                        alt="Illustration of Trikonasana step-by-step" 
+                        class="w-full h-auto object-cover rounded-xl mb-4"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFE8C8/444?text=Triangle+Pose+Steps';">
+                </div>
+                <div>
+                    <p class="text-gray-700 mb-4">No matter which variation you are practicing, the basic shape of the pose is constant. Here are the step-by-step instructions:</p>
+                    <ol class="list-decimal list-outside ml-6 space-y-3">
+                        <li class="list-item">Begin in **Tadasana** (Mountain Pose), standing straight with the feet hip-width apart and the arms at the sides.</li>
+                        <li class="list-item">Step or jump the feet one leg's length apart. Turn the right foot out $90^\circ$ and the left foot slightly inwards.</li>
+                        <li class="list-item">Inhale and lift the arms parallel to the floor at shoulder height, palms facing down.</li>
+                        <li class="list-item">Exhale and extend your torso forward—bending from your **hip joint**, not the waist—to reach your side body directly over your front leg.</li>
+                        <li class="list-item">Place the right hand on the right shin, ankle, or the floor outside the right foot. You can also use a block for support.</li>
+                        <li class="list-item">Reach the left arm straight up toward the ceiling, aligning the arms with the shoulders. Gaze up at the left thumb or forward.</li>
+                        <li class="list-item">Hold the pose for a few breaths, lengthening the spine on inhales and deepening the stretch on exhales.</li>
+                        <li class="list-item">To release, inhale and lift the torso back up to a standing position, straighten the right leg, and return to Tadasana.</li>
+                        <li class="list-item">Repeat the entire sequence on the other side.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Back to selection button -->
+        <div class="text-center mt-12">
+            <a href="pose_selection.html" class="inline-block px-8 py-3 font-semibold text-white rounded-xl shadow-lg transition-transform duration-300 hover:scale-[1.03]" style="background-color: var(--color-accent-green);">
+                ← Back to Pose Selection
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Footer (Consistent across pages) -->
+    <footer class="bg-gray-100 py-6 border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+            &copy; 2025 Yogasthali. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>

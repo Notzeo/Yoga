@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yogasthali - Virabhadrasana I (Warrior I)</title>
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CDN and configure custom theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Tailwind Configuration for Poppins and requested colors, copied from pose_selection.html */
+        @layer base {
+            :root {
+                --color-bg-base: #F7FAF7;
+                --color-accent-green: #A8D5BA;
+                --color-accent-peach: #FFE8C8;
+                --color-text-dark: #444;
+            }
+        }
+        
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-bg-base); /* Base background color */
+            color: var(--color-text-dark);
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            transition: color 0.3s ease;
+            color: var(--color-text-dark);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background-color: var(--color-accent-green);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .gradient-bg {
+            background-image: linear-gradient(to bottom right, var(--color-bg-base), rgba(168, 213, 186, 0.2));
+        }
+
+        /* Specific styles for the info page content */
+        .content-section {
+            background-color: white;
+            border-left: 5px solid var(--color-accent-green);
+            padding: 2rem;
+        }
+
+        .list-item {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .highlight {
+            color: rgb(37 99 235); /* Tailwind blue-600 equivalent for the <i> tag */
+            font-style: italic;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex flex-col">
+
+    <!-- Navbar (Consistent with pose_selection.html) -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand (Using text logo for consistency) -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <span class="text-3xl font-bold" style="color: var(--color-accent-green);">Yogasthali</span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div class="flex space-x-2 sm:space-x-4 text-sm font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="pose_selection.html?mode=learn" class="nav-link">Learn</a>
+                    <a href="pose_selection.html?mode=practice" class="nav-link">Practice</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">About</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content for Pose Information -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Pose Title and Subtitle -->
+        <header class="text-center mb-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-2" style="color: var(--color-accent-green);">VIRABHADRASANA I</h1>
+            <p class="text-xl text-gray-700 italic">Warrior I Pose</p>
+            <!-- Removed the Feb 23, 2023 date as it's not typical for a static info page -->
+        </header>
+
+        <!-- Main Description -->
+        <section class="mb-10 p-6 rounded-2xl shadow-xl" style="background-color: var(--color-accent-peach);">
+            <p class="text-lg leading-relaxed text-text-dark">
+                Virabhadrasana 1 (Warrior 1 Pose), is an asana respecting the accomplishments of a fanciful warrior. 
+                Subsequently, it is additionally called the Warrior 1 posture. This asana is thought to be a standout amongst 
+                the most agile stances in yoga, and it involves a mess of excellence to the workout.
+            </p>
+        </section>
+        
+        <!-- Pose Image and Description Sections Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            
+            <!-- Pose Image (Full Width on Mobile/Tablet, 1/3 on Desktop) -->
+            <div class="lg:col-span-1 rounded-2xl overflow-hidden shadow-2xl">
+                <img src="images/Warrior1.jpeg" 
+                     alt="Illustration of Virabhadrasana I (Warrior I)" 
+                     class="w-full h-auto object-cover"
+                     onerror="this.onerror=null; this.src='https://placehold.co/400x600/A8D5BA/444?text=Warrior+I'; this.style.height='300px'; this.style.width='100%';"
+                     style="min-height: 250px;">
+            </div>
+
+            <!-- Steps, Benefits, Cautions (2/3 on Desktop) -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Steps Section -->
+                <section class="content-section rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">Steps of VIRABHADRASANA 1</h2>
+                    <ul class="list-disc list-outside ml-6 space-y-3">
+                        <li class="list-item">First stand straight and spread your legs; keep a 3 to 4 feet distance between your legs. Keep your right foot in the forward direction and keep the left foot back direction.</li>
+                        <li class="list-item">With your right leg turn outwards at 90 degree and keep left leg by 15 degrees. Place your heel of the right leg is completely parallel to the midpoint of the left leg.</li>
+                        <li class="list-item">Raise your arms up to the height of shoulders. Keep your arms parallel to the ground with palms facing upward.</li>
+                        <li class="list-item">Breathe out and twist your right knee in a way that knee and ankle makes a parallel line. <span class="highlight">(Ensure that your knee does not go ahead in front of your ankle)</span>.</li>
+                        <li class="list-item">Look to your right side.</li>
+                        <li class="list-item">Now stretch your arms and join your palms above your head <span class="highlight">(Make a salutation pose or Namaskar pose with your palms above the head)</span>.</li>
+                        <li class="list-item">Keep looking at your palms and slowly push down your pelvis.</li>
+                        <li class="list-item">Hold the pose with the same determination as a <span class="highlight">warrior</span>, and wear a smile on your face. Breathe normally and keep going down.</li>
+                        <li class="list-item">Remain in this position for a moment; with the feeling that you are a warrior.</li>
+                        <li class="list-item">Breathe normally in and come to the standing position.</li>
+                        <li class="list-item">Breathe out and slowly put your hands down.</li>
+                        <li class="list-item">Repeat this Asana from your left side (look at your left side), by putting your left leg in forward direction and right leg at the back. (Opposite to the earlier process).</li>
+                    </ul>
+                </section>
+
+                <!-- Benefits Section -->
+                <section class="content-section rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">THE BENEFITS OF VIRABHADRASANA 1</h2>
+                    <ul class="list-disc list-outside ml-6 space-y-3">
+                        <li class="list-item">It strengthens and tones your lower back, legs and arms, and the legs.</li>
+                        <li class="list-item">It strengthens your Thighs, Ankles, Calves, Shoulders, Arms and Back.</li>
+                        <li class="list-item">It stretches your Navel, Ankles, and thighs, Groin, Lungs, Thorax, Calves, Shoulders and Neck.</li>
+                        <li class="list-item">It increases the stamina of the body.</li>
+                        <li class="list-item">It is likewise an incredible asana for those who are in sedentary jobs.</li>
+                        <li class="list-item">Useful for the digestive system and spine.</li>
+                        <li class="list-item">This asana backs off solidified shoulders.</li>
+                        <li class="list-item">It additionally discharges stress from the shoulders very quickly.</li>
+                        <li class="list-item">It relaxes the mind and the body.</li>
+                        <li class="list-item">It spreads the thought of strength, peace, elegance and a feeling of auspiciousness.</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+
+        <!-- Cautions and Watch Out For Sections (Outside the 2/3 column for better flow) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Contraindications Section -->
+            <section class="p-6 rounded-2xl shadow-xl border border-red-300/50" style="background-color: var(--color-accent-peach);">
+                <h2 class="text-2xl font-semibold text-red-600 mb-4">CONTRAINDICATIONS & CAUTIONS</h2>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li class="list-item">High blood pressure</li>
+                    <li class="list-item">Heart issues</li>
+                    <li class="list-item">Neck problems</li>
+                </ul>
+            </section>
+            
+            <!-- Watch Out For Section -->
+            <section class="p-6 rounded-2xl shadow-xl border border-yellow-300/50" style="background-color: var(--color-accent-peach);">
+                <h2 class="text-2xl font-semibold text-yellow-800 mb-4">WATCH OUT FOR</h2>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li class="list-item">Keep your feet roughly hip distance apart as if on separate train tracks in order to keep your hips facing forward. If you still feel discomfort in the lower back or pelvis region, lift your back heel up for High lunge / Crescent pose instead.</li>
+                    <li class="list-item">If there are any <span class="highlight">injuries</span> or existing weaknesses in your neck, keep your chin tucked in and your neck in the line with your spine.</li>
+                </ul>
+            </section>
+        </div>
+
+        <!-- Back to selection button -->
+        <div class="text-center mt-12">
+            <a href="pose_selection.html" class="inline-block px-8 py-3 font-semibold text-white rounded-xl shadow-lg transition-transform duration-300 hover:scale-[1.03]" style="background-color: var(--color-accent-green);">
+                ← Back to Pose Selection
+            </a>
+        </div>
+        
+    </main>
+
+    <!-- Footer (Consistent with pose_selection.html) -->
+    <footer class="bg-gray-100 py-6 border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+            &copy; 2025 Yogasthali. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>
