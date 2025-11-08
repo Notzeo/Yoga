@@ -1,0 +1,8 @@
+export const poseLabels = {
+  1: "TADASANA",
+  2: "VIRABHADRASANA I",
+  3: "VIRABHADRASANA II",
+  4: "VRIKSHASANA",
+  5: "TRIKONASANA",
+  6: "ADHO MUKHO SWANASANA"
+};

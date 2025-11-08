@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+  --color-bg-base: #F7FAF7;
+  --color-accent-green: #A8D5BA;
+  --color-accent-peach: #FFE8C8;
+  --color-text-dark: #444;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--color-bg-base);
+  color: var(--color-text-dark);
+  line-height: 1.6;
+}
+
+nav {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-link {
+  padding: 10px 16px;
+  color: var(--color-text-dark);
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--color-accent-green);
+}
+
+footer {
+  background: #f3f3f3;
+  padding: 1rem;
+  text-align: center;
+  color: #777;
+  border-top: 1px solid #e1e1e1;
+}
+/* ---------------------------------- */
+/* NAVIGATION LINK STYLES */
+/* ---------------------------------- */
+.nav-link {
+    position: relative;
+    padding: 8px 16px;
+    transition: color 0.3s ease;
+    color: var(--color-text-dark);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background-color: var(--color-accent-green);
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* ---------------------------------- */
+/* BACKGROUND & UI STYLES */
+/* ---------------------------------- */
+.gradient-bg {
+    /* Uses the CSS variables defined in the HTML <style> block */
+    background-image: linear-gradient(to bottom right, var(--color-bg-base), rgba(168, 213, 186, 0.2));
+}
+
+.progress-circle-base {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #e5e7eb; /* Light gray base */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------------------------------- */
+/* FEEDBACK GLOW EFFECTS */
+/* ---------------------------------- */
+.correct-glow {
+    /* Emerald glow using CSS variables from HTML */
+    box-shadow: 0 0 25px var(--color-green), 0 0 10px rgba(16, 185, 129, 0.5) !important; 
+    border-color: var(--color-green) !important;
+    transition: box-shadow 0.5s ease, border-color 0.5s ease;
+}
+.incorrect-glow {
+    /* Red glow using CSS variables from HTML */
+    box-shadow: 0 0 25px var(--color-red), 0 0 10px rgba(239, 68, 68, 0.5) !important; 
+    border-color: var(--color-red) !important;
+    transition: box-shadow 0.5s ease, border-color 0.5s ease;
+}
