@@ -6,16 +6,20 @@
     <title>Yogasthali - Pose Detection</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <link rel="stylesheet" href="./styles.css">
-
+    <!-- Load required ML libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js"></script> 
+    <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+    
     <style>
         /* Define custom CSS variables/colors for use in Tailwind and custom CSS */
         @layer base {
             :root {
                 --color-bg-base: #F7FAF7;
-                --color-accent-green: #A8D5BA;
+                --color-accent-green: #25a87e; /* Slightly darker green for visibility */
                 --color-accent-peach: #FFE8C8;
                 --color-text-dark: #444;
                 --color-red: #ef4444; 
@@ -30,13 +34,28 @@
             color: var(--color-text-dark);
         }
 
+        /* Gradient Background for body/main container */
+        .gradient-bg {
+            background: linear-gradient(180deg, var(--color-bg-base) 0%, #E7EDE7 100%);
+        }
+
+        /* Navigation Link Styling */
+        .nav-link {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            color: var(--color-text-dark);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-link:hover {
+            background-color: var(--color-accent-peach);
+        }
+
         /* p5.js canvas will be injected into #video-container */
         #video-container {
             position: relative;
             width: 100%;
             max-width: 640px; 
             margin: 0 auto;
-            /* Added transition and default glow property for smooth changes */
             transition: box-shadow 0.3s ease-out, border-color 0.3s ease-out;
             --glow-color: var(--color-accent-green); /* Default to accent green */
         }
@@ -45,38 +64,64 @@
         #video-container canvas {
             display: block;
             border-radius: 1rem;
+            background-color: #000; /* Black background for video feed */
         }
 
         /* CSS for the dynamic accuracy glow effect */
         .pose-glow {
-            /* The border color will be set dynamically in JS via --glow-color */
             border-color: var(--glow-color) !important; 
-            /* box-shadow will use the dynamic color for the glow effect */
             box-shadow: 0 0 15px var(--glow-color), 0 0 30px var(--glow-color); 
         }
+
+        /* CSS for the Progress Circle Base (simplified visual) */
+        .progress-circle-base {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--color-bg-base);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            /* Using a linear gradient to simulate progress based on --progress-value */
+            --progress-value: 0; 
+            background: conic-gradient(
+                var(--color-accent-green) calc(var(--progress-value) * 1%), 
+                #e5e7eb calc(var(--progress-value) * 1%)
+            );
+        }
+
+        .progress-circle-base::before {
+            content: '';
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+        #accuracy-percentage {
+            position: relative;
+            z-index: 10;
+        }
     </style>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script> 
-    <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
 </head>
 <body class="gradient-bg min-h-screen flex flex-col">
 
     <nav class="sticky top-0 z-50 bg-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="flex items-center space-x-2">
+                <a href="#" class="flex items-center space-x-2">
                     <span class="text-3xl font-bold text-accent-green">Yogasthali</span>
                 </a>
 
                 <div class="flex space-x-2 sm:space-x-4 text-sm font-medium">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="pose_selection.html?mode=learn" class="nav-link">Learn</a>
-                    <a href="pose_selection.html?mode=practice" class="nav-link font-semibold text-accent-green">Practice</a>
-                    <a href="about.html" class="nav-link hidden sm:inline-block">About</a>
-                    <a href="contact.html" class="nav-link hidden sm:inline-block">Contact</a>
+                    <a href="#" class="nav-link">Home</a>
+                    <a href="#" class="nav-link">Learn</a>
+                    <a href="#" class="nav-link font-semibold text-accent-green">Practice</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">About</a>
+                    <a href="#" class="nav-link hidden sm:inline-block">Contact</a>
                 </div>
             </div>
         </div>
@@ -91,14 +136,17 @@
             
             <div class="w-full lg:w-3/5 mb-8 lg:mb-0 flex flex-col items-center">
                 <div id="video-container" class="mb-6 rounded-2xl overflow-hidden border-4 border-accent-green shadow-2xl pose-glow">
-                    <p id="loading-status" class="text-center p-4 text-sm text-gray-500">Initializing Webcam and Model...</p>
+                    <p id="loading-status" class="text-center p-4 text-sm text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                        Initializing Webcam and Model...
+                    </p>
+                    <!-- P5 Canvas will be placed here by detection.js -->
                 </div>
 
 
                 <div class="bg-white p-4 rounded-2xl shadow-xl border border-gray-100 text-left w-full max-w-[640px]">
-                    <h3 class="text-xl font-semibold mb-3 text-gray-700">Reference Pose</h3>
+                    <h3 class="text-xl font-semibold mb-3 text-gray-700">Reference Pose (Mountain Pose)</h3>
                     <img id="reference-pose-img" 
-                        src="https://placehold.co/640x480/FFE8C8/444?text=Pose+Image+Loading" 
+                        src="https://placehold.co/640x480/FFE8C8/444?text=Mountain+Pose+Reference" 
                         class="w-full h-auto rounded-xl shadow-md border border-accent-peach transition-all duration-500" 
                         alt="Reference image for the selected yoga pose."
                         onerror="this.src='https://placehold.co/640x480/FFE8C8/444?text=Image+Unavailable';"
@@ -112,7 +160,7 @@
 
                 <div class="flex flex-col items-center mb-8">
                     <label class="text-xl font-medium text-text-dark mb-4">Pose Accuracy</label>
-                    <div class="progress-circle-base">
+                    <div class="progress-circle-base" id="accuracy-circle">
                         <span id="accuracy-percentage" class="text-4xl font-bold text-accent-green">0%</span>
                     </div>
                 </div>
@@ -138,7 +186,7 @@
                     <p id="feedback-message" class="text-sm mt-1">Please allow camera access and wait for the model to load.</p>
                 </div>
 
-                <a href="pose_selection.html" class="inline-block bg-gray-500 text-white font-semibold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-gray-600">
+                <a href="#" class="inline-block bg-gray-500 text-white font-semibold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:bg-gray-600">
                     Back to Poses
                 </a>
             </div>
@@ -152,6 +200,7 @@
         </div>
     </footer>
     
+    <!-- Link to the external JavaScript file -->
     <script src="./detection.js"></script>
 </body>
 </html>
