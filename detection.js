@@ -1,374 +1,247 @@
-// --- Global Variables (P5/ML5 accessible) ---
-let video;
-let poseNet;
-let pose;
-let skeleton;
-let brain; // ml5 Neural Network
-
-let successSynth; // Tone.js for correct pose
-let errorSynth;   // Tone.js for error
-
-let state = 'waiting';
-let posesArray = ['TADASANA (Mountain Pose)', 'VIRABHADRASANA I (Warrior I)', 'VIRABHADRASANA II (Warrior II)', 'VRIKSHASANA (Tree Pose)', 'TRIKONASANA (Triangle Pose)', 'Adho Mukho Svanasana (Downward Dog)'];
-let imgArray = [
-    "https://placehold.co/640x480/A8D5BA/444?text=TADASANA+Ref",
-    "https://placehold.co/640x480/FFE8C8/444?text=Warrior+I+Ref",
-    "https://placehold.co/640x480/A8D5BA/444?text=Warrior+II+Ref",
-    "https://placehold.co/640x480/FFE8C8/444?text=Tree+Pose+Ref",
-    "https://placehold.co/640x480/A8D5BA/444?text=Triangle+Ref",
-    "https://placehold.co/640x480/FFE8C8/444?text=Downward+Dog+Ref"
-];
-let targetLabel = 0;
-let poseCounter = 0;
-let errorCounter = 0;
-let iterationCounter = 0;
-let timeLeft = 30;
+// --- Global Variables ---
+let video, poseNet, pose, skeleton, brain;
 let isModelReady = false;
+let poseCounter = 0;
+let iterationCounter = 0;
+let errorCounter = 0;
+let timeLeft = 30;
 
-// --- DOM Element References (Assumed to exist in HTML) ---
-const timerDisplay = document.getElementById("timer-display");
+// Yoga Pose Data
+const posesArray = [
+  "TADASANA (Mountain Pose)",
+  "VIRABHADRASANA I (Warrior I)",
+  "VIRABHADRASANA II (Warrior II)",
+  "VRIKSHASANA (Tree Pose)",
+  "TRIKONASANA (Triangle Pose)",
+  "Adho Mukho Svanasana (Downward Dog)"
+];
+
+const imgArray = [
+  "images/urdhava.jpg",
+  "images/warrior1.gif",
+  "images/warrior2.gif",
+  "images/Tree.gif",
+  "images/Tri.gif",
+  "images/adhomukh.gif"
+];
+
+// --- DOM References ---
 const poseTitle = document.getElementById("pose-title");
 const referencePoseImg = document.getElementById("reference-pose-img");
+const timerDisplay = document.getElementById("timer-display");
+const accuracyBar = document.getElementById("confidence-bar");
+const accuracyPercentage = document.getElementById("accuracy-percentage");
+const confidenceText = document.getElementById("confidence-text");
+const poseStatus = document.getElementById("pose-status");
+const feedbackMessage = document.getElementById("feedback-message");
+const loadingStatus = document.getElementById("loading-status");
 const videoContainer = document.getElementById("video-container");
-const accuracyBar = document.getElementById('confidence-bar');
-const accuracyPercentage = document.getElementById('accuracy-percentage');
-const accuracyCircle = document.getElementById('accuracy-circle');
-const poseStatus = document.getElementById('pose-status');
-const feedbackMessage = document.getElementById('feedback-message');
-const loadingStatus = document.getElementById('loading-status');
-const startupOverlay = document.getElementById('startup-overlay');
+const accuracyCircle = document.getElementById("accuracy-circle");
 
+// --- Setup Function ---
+function setup() {
+  let canvas = createCanvas(640, 480);
+  canvas.parent(videoContainer);
 
-// --- P5.js Setup Function ---
+  // 1️⃣ Create webcam video
+  video = createCapture(VIDEO);
+  video.size(640, 480);
+  video.parent(videoContainer);
+  video.hide();
+  video.elt.setAttribute("playsinline", "");
 
-window.setup = function() {
-    const videoContainerEl = document.getElementById("video-container");
-    // Create P5 canvas and attach it to the container
-    let canvas = createCanvas(640, 480); 
-    canvas.parent(videoContainerEl);
-    
-    // CRITICAL FIX: We are removing noLoop() here so draw() runs immediately 
-    // and constantly checks if the video stream is ready, like the old code.
+  // 2️⃣ Load PoseNet
+  poseNet = ml5.poseNet(video, modelLoaded);
+  poseNet.on("pose", gotPoses);
+
+  // 3️⃣ Load trained ML model
+  const options = { inputs: 34, outputs: 6, task: "classification", debug: true };
+  brain = ml5.neuralNetwork(options);
+
+  const modelInfo = {
+    model: "model/model.json",
+    metadata: "model/model_meta.json",
+    weights: "model/weights.bin",
+  };
+
+  brain.load(modelInfo, brainLoaded);
+
+  // 4️⃣ Initial UI
+  poseTitle.textContent = "Loading Model...";
+  loadingStatus.textContent = "Initializing camera and model...";
+  referencePoseImg.src = imgArray[0];
 }
 
-
-/**
- * 1. Called by user click. Starts Tone.js and initiates video capture.
- */
-window.startYogaSession = async function() {
-    // 1. Start Tone.js Audio Context (Requires user interaction)
-    try {
-        await Tone.start();
-        console.log("Audio Context started.");
-    } catch (e) {
-        console.error("Failed to start Tone Audio Context:", e);
-        feedbackMessage.textContent = 'ERROR: Audio failed to start.';
-        return;
-    }
-
-    // Prepare UI for loading
-    loadingStatus.textContent = 'Audio ready. Activating camera... (Please grant permission)';
-    poseStatus.textContent = "Status: Initializing...";
-    
-    // 2. Initialize Video
-    video = createCapture(VIDEO);
-    video.size(640, 480);
-    
-    // TEMPORARY: Commented out video.hide() for easy debugging.
-    // REMINDER: If the video appears outside the canvas, uncomment the line below.
-    // video.hide(); 
-    
-    // CRITICAL FIX: Use the native video element's oncanplay event.
-    // This is the most reliable event to ensure video frames are available.
-    video.elt.oncanplay = videoReady;
-    
-    // 3. Initialize Tone.js Synths
-    successSynth = new Tone.Synth({ oscillator: { type: "sine" } }).toDestination();
-    errorSynth = new Tone.Synth({ oscillator: { type: "square" } }).toDestination();
+// --- PoseNet Ready ---
+function modelLoaded() {
+  console.log("PoseNet is Ready ✅");
+  loadingStatus.textContent = "PoseNet Loaded. Preparing model...";
 }
 
-/**
- * 2. This callback runs ONLY when the video stream is successfully active and ready to draw.
- */
-function videoReady() {
-    console.log("Video stream is ready! PoseNet initialization starting.");
-    loadingStatus.textContent = 'Video stream active. Loading PoseNet...';
-    
-    // CRITICAL FIX: Since draw() is already running (no noLoop in setup), 
-    // we do NOT need to call loop() here. The draw() loop will now render frames.
+// --- Model Ready ---
+function brainLoaded() {
+  console.log("Neural Network Model Loaded ✅");
+  isModelReady = true;
 
-    // 3. Initialize PoseNet
-    poseNet = ml5.poseNet(video, { flipHorizontal: false }, () => {
-        console.log("PoseNet Ready");
-        loadingStatus.textContent = 'PoseNet Ready. Loading Classification Model...';
-        initNeuralNetwork(); // Proceed to load the brain model
-    });
-    poseNet.on('pose', gotPoses);
+  loadingStatus.textContent = "";
+  poseTitle.textContent = posesArray[poseCounter];
+  referencePoseImg.src = imgArray[poseCounter];
+  feedbackMessage.textContent = "Model ready! Begin holding your first pose.";
+
+  classifyPose();
 }
 
-
-/**
- * 4. Loads the pre-trained classification model.
- */
-async function initNeuralNetwork() {
-    const options = { inputs: 34, outputs: 6, task: 'classification', debug: true };
-    brain = ml5.neuralNetwork(options);
-
-    const modelInfo = {
-        model: 'model/model.json', 
-        metadata: 'model/model_meta.json',
-        weights: 'model/model.weights.bin',
-    };
-
-    try {
-        await brain.load(modelInfo);
-        console.log("Classification Model Loaded");
-        
-        isModelReady = true;
-        
-        // Hide overlay and set final status
-        startupOverlay.classList.add('hidden-overlay'); 
-        setTimeout(() => { startupOverlay.style.display = 'none'; }, 1000); 
-
-        targetLabel = poseCounter;
-        poseTitle.textContent = posesArray[poseCounter];
-        referencePoseImg.src = imgArray[poseCounter];
-        
-        feedbackMessage.textContent = 'Model Loaded! Start the first pose.';
-        
-        classifyPose(); // Start classification loop
-
-    } catch (e) {
-        console.error("Failed to load Neural Network Model:", e);
-        feedbackMessage.textContent = 'ERROR: Failed to load model. Check model path.';
-        poseStatus.textContent = "Status: Initialization Failed";
-    }
-}
-
-
-// --- Pose Data Handlers ---
-
+// --- Pose Data Handler ---
 function gotPoses(poses) {
-    if (poses.length > 0) {
-        pose = poses[0].pose;
-        skeleton = poses[0].skeleton;
-    } else {
-        pose = null;
-        skeleton = null;
-        if (isModelReady) {
-            poseStatus.textContent = "Status: No Person Detected";
-            feedbackMessage.textContent = "Please step fully into the camera frame.";
-        }
-    }
+  if (poses.length > 0) {
+    pose = poses[0].pose;
+    skeleton = poses[0].skeleton;
+  } else {
+    pose = null;
+  }
 }
 
-
-/**
- * Normalizes the keypoints relative to the center of the hips/torso.
- * @param {object} currentPose - The ml5 pose object.
- * @returns {Array<number>} - Flattened array of normalized [relativeX, relativeY] data (34 inputs).
- */
+// --- Normalize Pose Keypoints ---
 function normalizePose(currentPose) {
-    if (!currentPose || currentPose.keypoints.length === 0) return [];
-    
-    const leftHip = currentPose.keypoints.find(kp => kp.part === 'leftHip');
-    const rightHip = currentPose.keypoints.find(kp => kp.part === 'rightHip');
-    
-    if (!leftHip || !rightHip || leftHip.score < 0.2 || rightHip.score < 0.2) {
-        return []; 
-    }
+  if (!currentPose || currentPose.keypoints.length === 0) return [];
 
-    const centerHipX = (leftHip.position.x + rightHip.position.x) / 2;
-    const centerHipY = (leftHip.position.y + rightHip.position.y) / 2;
+  const leftHip = currentPose.keypoints.find(kp => kp.part === "leftHip");
+  const rightHip = currentPose.keypoints.find(kp => kp.part === "rightHip");
+  if (!leftHip || !rightHip) return [];
 
-    const normalizedData = [];
-    for (let i = 0; i < currentPose.keypoints.length; i++) {
-        let kp = currentPose.keypoints[i];
-        
-        let relativeX = kp.position.x - centerHipX;
-        let relativeY = kp.position.y - centerHipY;
+  const centerHipX = (leftHip.position.x + rightHip.position.x) / 2;
+  const centerHipY = (leftHip.position.y + rightHip.position.y) / 2;
 
-        normalizedData.push(relativeX);
-        normalizedData.push(relativeY);
-    }
-    return normalizedData;
+  const normalized = [];
+  for (let i = 0; i < currentPose.keypoints.length; i++) {
+    const kp = currentPose.keypoints[i];
+    normalized.push(kp.position.x - centerHipX);
+    normalized.push(kp.position.y - centerHipY);
+  }
+  return normalized;
 }
-
 
 // --- Classification Loop ---
-
 async function classifyPose() {
-    if (!pose || !brain || !isModelReady) {
-        setTimeout(classifyPose, 500);
-        return;
-    }
-    
-    const inputs = normalizePose(pose);
-    
-    if (inputs.length === 0) {
-        poseStatus.textContent = "Status: Bad Detection (Recenter)";
-        feedbackMessage.textContent = "Cannot detect hips/body center. Adjust position.";
-        updateUI(0);
-        setTimeout(classifyPose, 500);
-        return;
-    }
+  if (!pose || !isModelReady) {
+    setTimeout(classifyPose, 500);
+    return;
+  }
 
-    try {
-        const results = await brain.classify(inputs);
-        handleResults(results);
-    } catch (err) {
-        console.error("Classification error:", err);
-        setTimeout(classifyPose, 500);
-    }
+  const inputs = normalizePose(pose);
+  if (inputs.length === 0) {
+    feedbackMessage.textContent = "Adjust position to fit in camera frame.";
+    setTimeout(classifyPose, 500);
+    return;
+  }
+
+  try {
+    const results = await brain.classify(inputs);
+    handleResults(results);
+  } catch (err) {
+    console.error("Classification error:", err);
+    setTimeout(classifyPose, 500);
+  }
 }
 
+// --- Handle Classification Results ---
 function handleResults(results) {
-    if (!results || results.length === 0) {
-        setTimeout(classifyPose, 500);
-        return;
-    }
+  if (!results || results.length === 0) {
+    setTimeout(classifyPose, 500);
+    return;
+  }
 
-    const { label, confidence } = results[0];
-    const detectedLabelIndex = parseInt(label);
+  const { label, confidence } = results[0];
+  const detectedLabelIndex = parseInt(label);
+  const confidencePct = Math.floor(confidence * 100);
 
-    updateUI(confidence); 
+  // Update Accuracy Bar + Circle
+  accuracyBar.style.width = `${confidencePct}%`;
+  confidenceText.textContent = `${confidencePct}%`;
+  accuracyPercentage.textContent = `${confidencePct}%`;
+  accuracyCircle.style.setProperty("--progress-value", confidencePct);
 
-    if (confidence > 0.75) {
-        if (detectedLabelIndex === targetLabel) {
-            // POSE IS CORRECT
-            videoContainer.classList.add("correct-glow");
-            videoContainer.classList.remove("incorrect-glow");
-            
-            poseStatus.textContent = `Status: ${posesArray[targetLabel]} - Correct`;
-            feedbackMessage.textContent = `Hold steady! Accuracy: ${Math.floor(confidence * 100)}%`;
+  if (confidence > 0.75) {
+    if (detectedLabelIndex === poseCounter) {
+      iterationCounter++;
+      poseStatus.textContent = `✅ Correct Pose: ${posesArray[poseCounter]}`;
+      feedbackMessage.textContent = `Great! Accuracy: ${confidencePct}%`;
+      videoContainer.style.setProperty("--glow-color", "var(--color-green)");
 
-            iterationCounter++;
-            
-            if (iterationCounter >= 30) { 
-                iterationCounter = 0;
-                timeLeft = 30;
-                successSynth.triggerAttackRelease("C5", "8n");
-                nextPose();
-            } else {
-                timeLeft = Math.max(0, 30 - iterationCounter); 
-                setTimeout(classifyPose, 700); 
-            }
-        } else {
-            // INCORRECT POSE
-            videoContainer.classList.add("incorrect-glow");
-            videoContainer.classList.remove("correct-glow");
-            
-            poseStatus.textContent = `Status: Detected ${posesArray[detectedLabelIndex]} (Wrong)`;
-            feedbackMessage.textContent = `Wrong pose detected. Try to transition to ${posesArray[targetLabel]}.`;
-
-            errorCounter++;
-
-            if (errorCounter >= 4) {
-                errorCounter = 0;
-                iterationCounter = 0;
-                timeLeft = 30;
-                errorSynth.triggerAttackRelease("G3", "16n");
-                feedbackMessage.textContent = "Time reset due to repeated incorrect pose. Focus on alignment!";
-            }
-            setTimeout(classifyPose, 700);
-        }
+      if (iterationCounter >= 30) {
+        iterationCounter = 0;
+        nextPose();
+      }
     } else {
-        // LOW CONFIDENCE
-        videoContainer.classList.remove("correct-glow", "incorrect-glow");
-        poseStatus.textContent = "Status: Adjusting or Low Confidence";
-        feedbackMessage.textContent = "Keep adjusting your body to increase confidence in the target pose.";
-        setTimeout(classifyPose, 700);
+      errorCounter++;
+      poseStatus.textContent = `❌ Wrong Pose Detected (${confidencePct}%)`;
+      feedbackMessage.textContent = `Detected ${posesArray[detectedLabelIndex]}, try to adjust!`;
+      videoContainer.style.setProperty("--glow-color", "var(--color-red)");
+
+      if (errorCounter >= 4) {
+        errorCounter = 0;
+        iterationCounter = 0;
+        timeLeft = 30;
+        feedbackMessage.textContent = "Restarting timer — refocus on current pose.";
+      }
     }
+  } else {
+    poseStatus.textContent = "⚠️ Adjust position — low confidence";
+    feedbackMessage.textContent = "Keep aligning your body for better accuracy.";
+    videoContainer.style.setProperty("--glow-color", "var(--color-accent-green)");
+  }
+
+  timerDisplay.textContent = `00:${String(timeLeft).padStart(2, "0")}`;
+  setTimeout(classifyPose, 700);
 }
 
+// --- Move to Next Pose ---
 function nextPose() {
-    poseCounter++;
-    if (poseCounter >= posesArray.length) {
-        poseTitle.textContent = "CONGRATULATIONS! All poses complete!";
-        poseStatus.textContent = "Practice Finished";
-        feedbackMessage.textContent = "You successfully completed the yoga sequence. Namaste!";
-        referencePoseImg.src = "https://placehold.co/640x480/A8D5BA/444?text=FINISHED";
-        return;
-    }
+  poseCounter++;
+  if (poseCounter >= posesArray.length) {
+    poseTitle.textContent = "🎉 Session Complete!";
+    poseStatus.textContent = "You’ve mastered all poses!";
+    referencePoseImg.src = "https://placehold.co/640x480/A8D5BA/444?text=Session+Complete";
+    feedbackMessage.textContent = "Congratulations! Namaste 🙏";
+    return;
+  }
 
-    targetLabel = poseCounter;
-    poseTitle.textContent = posesArray[poseCounter];
-    referencePoseImg.src = imgArray[poseCounter];
-    timeLeft = 30;
-    iterationCounter = 0;
-    errorCounter = 0;
-    
-    poseStatus.textContent = `Next Pose: ${posesArray[poseCounter]}`;
-    feedbackMessage.textContent = "Get ready for the next pose. You have 30 seconds to hold it.";
+  poseTitle.textContent = posesArray[poseCounter];
+  referencePoseImg.src = imgArray[poseCounter];
+  feedbackMessage.textContent = "Get ready for the next pose!";
+  timeLeft = 30;
+  iterationCounter = 0;
+  errorCounter = 0;
 
-    setTimeout(classifyPose, 1500); 
+  setTimeout(classifyPose, 2000);
 }
 
-
-// --- UI Update ---
-
-function updateUI(confidence) {
-    const percentage = Math.floor(confidence * 100);
-    
-    accuracyBar.style.width = `${percentage}%`;
-    document.getElementById('confidence-text').innerText = `${percentage}% Confidence`;
-    
-    accuracyPercentage.innerText = `${percentage}%`;
-    accuracyCircle.style.setProperty('--progress-value', percentage);
-
-    timerDisplay.textContent = `00:${String(timeLeft).padStart(2, "0")}`;
-}
-
-
-// --- P5.js Drawing Loop ---
-
-window.draw = function() {
-    // If video hasn't been created yet (before user clicks start), do nothing.
-    if (!video) return;
-
-    // The draw loop runs constantly now, ready to display frames the moment they start arriving.
-    background(0);
-
-    // --- Video Rendering ---
-
-    // Flip the video horizontally to create a mirror effect
+// --- Drawing Loop ---
+function draw() {
+  background(0);
+  if (video) {
     push();
-    translate(width, 0); // Translate to the right edge of the canvas
-    scale(-1, 1);       // Flip horizontally
-    
-    // Draw the video using explicit 640x480 size
-    image(video, 0, 0, 640, 480); 
-    pop(); 
-    
-    // --- Visual Debugging ---
-    if (!pose || !isModelReady) {
-        fill(255, 255, 255, 200); // Semi-transparent white
-        noStroke();
-        rect(0, height - 30, width, 30);
-        
-        fill(255, 100, 100);
-        textSize(18);
-        textAlign(LEFT, CENTER);
-        text("Camera Active - Looking for Person...", 10, height - 15);
+    translate(width, 0);
+    scale(-1, 1);
+    image(video, 0, 0, width, height);
+    pop();
+  }
+
+  if (pose) {
+    for (let i = 0; i < skeleton.length; i++) {
+      let a = skeleton[i][0];
+      let b = skeleton[i][1];
+      stroke(255);
+      strokeWeight(3);
+      line(a.position.x, a.position.y, b.position.x, b.position.y);
     }
 
-    // --- Pose Overlay Drawing ---
-
-    if (pose) {
-        // Draw skeleton
-        skeleton.forEach(bone => {
-            stroke(255, 255, 255); // White skeleton
-            strokeWeight(4);
-            line(bone[0].position.x, bone[0].position.y, bone[1].position.x, bone[1].position.y);
-        });
-        
-        // Draw keypoints
-        pose.keypoints.forEach(k => {
-            if (k.score > 0.1) {
-                fill(0, 255, 0); // Green joints
-                noStroke();
-                ellipse(k.position.x, k.position.y, 16, 16);
-            }
-        });
+    for (let i = 0; i < pose.keypoints.length; i++) {
+      let x = pose.keypoints[i].position.x;
+      let y = pose.keypoints[i].position.y;
+      fill(0, 255, 0);
+      noStroke();
+      ellipse(x, y, 12, 12);
     }
+  }
 }
